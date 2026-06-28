@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        .expense{
+            display:grid;
+            /* justify-content: space-between; */
+            min-width: 600px;
+            margin:auto;
+            grid-template-columns: 1fr 1fr 0.3fr;
+        }
+        .expense li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Expense Tracker</h1>
+    <div>
+       <input type="text" class="input"> 
+       <input type="number" placeholder="Enter price" class="price">
+       <button class="btn">Add Expense</button>
+       <button class="clear">Clear All</button>
+    </div>
+    <section class="list">
+
+    </section>
+    <section>
+        <p class="sum"></p>
+    </section>
+    <script>
+        let input = document.querySelector(".input");
+        let price = document.querySelector(".price");
+        let btn = document.querySelector(".btn");
+        let list = document.querySelector(".list");
+        // let inn;
+        let innn;
+        // let innnn;
+        
+        let getdata1 = ()=>{
+            return JSON.parse(localStorage.getItem("data"));
+            // JSON.parse(localStorage.getItem("price"));
+        }
+        let getdata2 = ()=>{
+            // return JSON.pasrse(localStorage.getItem("data"));
+            return JSON.parse(localStorage.getItem("price"));
+        }
+        let arr = getdata1()|| [];
+        let p = getdata2() || [];
+        // function for adding element to section
+        let add = (e1, e2) => {
+            if((input.value) && (price.value) != ""){
+            let div = document.createElement("div");
+            div.innerHTML = `<li class="item">${e1}</li>    <li class="item_p">${e2}</li>  <button class="del">Delete</button>`;
+            div.classList.add("expense");
+            
+            list.append(div);
+            add_expense();
+            }
+            
+            // count();
+            // input.value = "";
+            // div.querySelector(".item").innerText = e1;
+            // div.querySelector(".item_p").innerText =`Rs. ${e2}`;
+ 
+        }
+        // function for adding to local storage
+        let add_to_localstorage = ()=>{
+            localStorage.setItem("data", JSON.stringify(arr));
+            localStorage.setItem("price", JSON.stringify(p));
+        }
+        let add_expense = ()=>{
+            
+            arr.push(input.value);
+            p.push(price.value);
+            add_to_localstorage();
+            count();
+            input.value = "";
+            price.value = "";
+        
+            
+        }
+
+        // Event listener for btn
+        btn.addEventListener("click", (e)=>{
+            e.preventDefault();
+            add(input.value, price.value);
+            // arr.push(input.value);
+            // p.push(price.value);
+            // add_to_localstorage();
+            // count();
+            // input.value = "";
+            // price.value = "";
+            // add_expense();
+            
+        });
+          
+            
+        if(arr.length !== 0){
+            for(let i = 0; i<arr.length; i++){
+            
+
+            add(arr[i], p[i]);
+        }
+    }
+
+        // let del = ()=>{
+        //     arr.remove(val);
+        //     p.remove(val);
+
+        // }
+        list.addEventListener("click", (e)=>{
+            e.preventDefault();
+            console.log(e.target);
+            let remove = e.target.parentElement;
+            if(e.target.classList.contains("del")){
+                remove.remove();
+            }
+            
+            let paise = e.target.previousElementSibling.innerText;
+            let vastu = remove.firstElementChild.innerText;
+            // for(let i =0;i<p.length;i++){
+            //     if(paise == arr[i]){
+                    
+            //     }
+            // }
+            for(let i =0;i<arr.length;i++){
+                if(vastu == arr[i]){
+                    // inn = i;
+                    if((paise == p[i])){
+                    innn = i;
+                }
+                }
+                
+                // if(inn==innn){
+                //     innnn = i;
+                // }
+            }
+            p = p.filter((element,index )=>{
+                if(index != innn){
+                    return element
+                }
+            });
+            arr = arr.filter((element,index)=>{
+                if(index != innn){
+                    return element
+                }
+
+            });
+            
+            add_to_localstorage();
+            count();
+
+        });
+
+        let count = ()=>{
+            var sum = 0;
+            for(let i =0 ; i<p.length;i++){
+                sum += Number(p[i])
+            }
+            // let total = `Total = ${sum}`;
+            document.querySelector(".sum").innerText = `Total = ${sum}`
+        }
+        count();
+        
+        input.addEventListener("keydown", (e)=>{
+            if(e.key == "Enter"){
+                price.focus();
+                    }
+                });
+        price.addEventListener("keydown", (e)=>{
+            if(e.key === "Enter"){
+                add(input.value, price.value);
+                input.focus();
+                // add();
+                // add_expense();
+            }
+            
+
+        })
+        let clear_all = ()=>{
+            arr= [];
+            p = [];
+            add_to_localstorage();
+            list.innerHTML = "";
+            count();
+            
+        }
+        document.querySelector(".clear").addEventListener("click", ()=>{
+            clear_all();
+        })
+        count();
+        // input.focus();
+        
+
+        let show = ()=>{
+            // add(input.value, price.value);
+            for(let i =0; i<arr.length;i++){
+                // add(arr[i], p[i]);
+                
+            let div = document.createElement("div");
+            div.innerHTML = `<li class="item">${arr[i]}</li>    <li class="item_p">${p[i]}</li>  <button class="del">Delete</button>`;
+            div.classList.add("expense");
+            
+            list.append(div);
+            
+            
+        }
+    }
+        show();
+        
+            
+            
+        
+
+    </script>
+</body>
+</html>
