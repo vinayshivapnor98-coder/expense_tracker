@@ -1,2 +1,3 @@
 # expense_tracker
 practice mini project
+this project help me to learn about DOM how it works and how the local storage works ....
